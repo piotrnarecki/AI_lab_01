@@ -24,16 +24,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
-# load dataset
-# url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/iris.csv"
-# names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
-# dataset = pandas.read_csv(url, names=names)
-
-# url = "/Users/piotrnarecki/Downloads/drugsCom_raw/drugsComTrain_raw.tsv"
-# names = ['drugName', 'condition', 'review', 'rating', 'date','usefulCount']
-# dataset = pandas.read_tsv(url, names=names)
-
-
 import csv
 
 # read tab-delimited file
@@ -48,24 +38,33 @@ with open('drugDataTrain.csv', 'w') as fou:
 
 # wyswietlanie
 
-url = "/Volumes/SD/Projects/PycharmProjects/pythonProject/AI_lab_01/drugDataTrain.csv"
-# names = ['drugName', 'condition', 'review', 'rating', 'date', 'usefulCount']
-names = ['drugName', 'condition', 'review', 'rating']
-dataset = pandas.read_csv(url, names=names)
+#url = "/Volumes/SD/Projects/PycharmProjects/pythonProject/AI_lab_01/drugDataTrain.csv"
+url = '/Users/piotrnarecki/Downloads/drugsCom_raw/drugsComTrain_raw.tsv'
+names = ['drugName', 'condition', 'rating', 'date', 'usefulCount']
+# names = ['drugName', 'rating']
+dataset = pandas.read_csv(url, delimiter='\t')
 
 # shape
-print(dataset.shape)
+# print(dataset.shape)
 
 # head
-print(dataset.head(20))
+print(dataset.head(10))
 
 # description
 print(dataset.describe())
 
-# class description
-#print(dataset.groupby('class').size())
+# encoder
 
-# # box and whisker plots
+
+# class description
+print(dataset.groupby('condition').size())
+
+#uzyc sklearn preprocessing  LabelEncodera
+
+
+
+
+## box and whisker plots
 # dataset.plot(kind='box', subplots=True, layout=(2, 2), sharex=False, sharey=False)
 # plt.show()
 #
