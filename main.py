@@ -1,6 +1,7 @@
 # python version
 import sys
 # scipy
+import numpy as np
 import scipy
 # numpy
 import numpy
@@ -38,30 +39,88 @@ with open('drugDataTrain.csv', 'w') as fou:
 
 # wyswietlanie
 
-#url = "/Volumes/SD/Projects/PycharmProjects/pythonProject/AI_lab_01/drugDataTrain.csv"
-url = '/Users/piotrnarecki/Downloads/drugsCom_raw/drugsComTrain_raw.tsv'
+# url = "/Volumes/SD/Projects/PycharmProjects/pythonProject/AI_lab_01/drugDataTrain.csv"
+train_path = '/Volumes/SD/Studia/Zima 2021/Sieci neuronowe L/Lista1/drugsCom_raw/drugsComTrain_raw.tsv'
+test_path = '/Volumes/SD/Studia/Zima 2021/Sieci neuronowe L/Lista1/drugsCom_raw/drugsComTrain_raw.tsv'
+
 names = ['drugName', 'condition', 'rating', 'date', 'usefulCount']
-# names = ['drugName', 'rating']
-dataset = pandas.read_csv(url, delimiter='\t')
+
+train_dataset = pandas.read_csv(train_path, delimiter='\t').dropna()
+test_dataset = pandas.read_csv(test_path, delimiter='\t').dropna()
+
+#zostawianie w tabeli tylko istotnych danych
+# train_dataset = train_dataset[["drugName", "condition", " rating"]]
+# test_dataset = test_dataset[["drugName", "condition", " rating"]]
+
+
+# train_dataset = pandas.read_csv(train_path, delimiter='\t')
+# print(len(train_dataset))
+# train_dataset = train_dataset.dropna()
+
+
+print(len(train_dataset))
+train_dataset = train_dataset.head(100000) #zostawia tylko 500 rekordow
+print(len(train_dataset))
+
+# train_dataset = train_dataset.head(-500) #usuwa  500 rekordow
+
+#lista lekow i chorob (string)
+drugs_list = []
+diseases_list = []
+
+
+for index, row in train_dataset.iterrows():
+    drug = row['drugName']
+    disease = row['condition']
+    if drug not in drugs_list: drugs_list.append(drug)
+    if disease not in diseases_list: diseases_list.append(disease)
+
+
+for index, row in train_dataset.iterrows():
+    drug = row['drugName']
+    disease = row['condition']
+    if drug not in drugs_list: drugs_list.append(drug)
+    if disease not in diseases_list: diseases_list.append(disease)
+
+#encoder (nazwa string-> liczba indywidualna)
+
+encoded_drugs_list = np.zeros((len(drugs_list), 1))
+encoded_diseases_list = np.zeros((len(diseases_list), 1))
+for i in range(0, len(drugs_list)):
+    encoded_drugs_list[i] = i #ZAMIENIC NA LOSOWE LICZBY ?
+
+for i in range(0, len(diseases_list)):
+    encoded_diseases_list[i] = i
+
+# replacing each string value with its corresponding index values
+train_dataset = train_dataset.replace(diseases_list, encoded_diseases_list)
+train_dataset = train_dataset.replace(drugs_list, encoded_drugs_list)
+
+
+test_dataset = test_dataset.replace(diseases_list, encoded_diseases_list)
+test_dataset = test_dataset.replace(drugs_list, encoded_drugs_list)
+
+#usuwanie nadmiernych kolumn
+# train_dataset = train_dataset[["drugName", "condition", " rating"]]
+# test_dataset = test_dataset[["drugName", "condition", " rating"]]
+
 
 # shape
 # print(dataset.shape)
 
 # head
-print(dataset.head(10))
+print(train_dataset.head(10))
 
 # description
-print(dataset.describe())
+#Print(dataset.describe())
 
 # encoder
 
 
 # class description
-print(dataset.groupby('condition').size())
+#print(dataset.groupby('condition').size())
 
-#uzyc sklearn preprocessing  LabelEncodera
-
-
+# uzyc sklearn preprocessing  LabelEncodera
 
 
 ## box and whisker plots
